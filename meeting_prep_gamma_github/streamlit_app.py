@@ -5,11 +5,24 @@ A polished, full-featured UI for generating executive-ready meeting
 preparation briefs using the Meeting Prep Gamma agent pipeline.
 """
 
+import asyncio
 import os
 import sys
 import time
 import datetime
 import traceback
+
+# ---------------------------------------------------------------------------
+# Fix asyncio for Streamlit: Streamlit runs scripts in a thread without an
+# event loop.  The OpenAI Agents SDK's Runner.run_sync() needs one.
+# ---------------------------------------------------------------------------
+try:
+    asyncio.get_event_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
+
+import nest_asyncio
+nest_asyncio.apply()
 
 import streamlit as st
 from dotenv import load_dotenv
